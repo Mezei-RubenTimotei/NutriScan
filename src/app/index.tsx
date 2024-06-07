@@ -5,7 +5,7 @@ import { Link, Redirect, Tabs } from "expo-router";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 
 const Index = () => {
-  return <Redirect href="today" />;
+  return <Redirect href="profile" />;
 };
 
 export default Index;

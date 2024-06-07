@@ -1,4 +1,3 @@
-import { View, Text } from "react-native";
 import React from "react";
 import { exerciseLvl } from "./../config/constants";
 import { goalResult } from "../dataTypes/types";

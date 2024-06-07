@@ -16,7 +16,7 @@ const ActivityBtn = ({ activity, handleOpenActivityBtn }: Props) => {
       >
         <View style={styles.lineContainer}>
           <Text style={styles.text}>{activity}</Text>
-          <AntDesign name="down" size={20} />
+          <AntDesign name="down" style={{ fontSize: 20 }} />
         </View>
       </TouchableOpacity>
     </View>

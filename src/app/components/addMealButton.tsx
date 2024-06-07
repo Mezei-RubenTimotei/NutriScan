@@ -20,7 +20,11 @@ const AddMeal = forwardRef<Ref, Props>(
           handleOpenBottomSheet();
         }}
       >
-        <AntDesign name="pluscircleo" size={24} color="royalblue" />
+        <AntDesign
+          name="pluscircleo"
+          style={{ fontSize: 24 }}
+          color="royalblue"
+        />
       </Pressable>
     );
   }

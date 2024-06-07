@@ -15,8 +15,13 @@ export default () => {
           name="today"
           options={{
             tabBarLabel: "Today",
+
             tabBarIcon: ({ color }) => (
-              <AntDesign name="carryout" color={color} size={24} />
+              <AntDesign
+                name="carryout"
+                color={color}
+                style={{ fontSize: 24 }}
+              />
             ),
           }}
         />
@@ -24,8 +29,9 @@ export default () => {
           name="goals"
           options={{
             tabBarLabel: "Goals",
+
             tabBarIcon: ({ color }) => (
-              <AntDesign name="Trophy" color={color} size={24} />
+              <AntDesign name="Trophy" color={color} style={{ fontSize: 24 }} />
             ),
           }}
         />
@@ -33,8 +39,13 @@ export default () => {
           name="info"
           options={{
             tabBarLabel: "Info",
+
             tabBarIcon: ({ color }) => (
-              <AntDesign name="camerao" color={color} size={24} />
+              <AntDesign
+                name="camerao"
+                color={color}
+                style={{ fontSize: 24 }}
+              />
             ),
           }}
         />
@@ -43,7 +54,7 @@ export default () => {
           options={{
             tabBarLabel: "Profile",
             tabBarIcon: ({ color }) => (
-              <AntDesign name="user" color={color} size={24} />
+              <AntDesign name="user" color={color} style={{ fontSize: 24 }} />
             ),
           }}
         />

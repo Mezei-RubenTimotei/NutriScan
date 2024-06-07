@@ -1,49 +1,69 @@
-import { StyleSheet, Text, View, TextInput, Button } from "react-native";
+import { StyleSheet, Text, View, TextInput, Button, Image } from "react-native";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
-import { sendLogin } from "../api/auth";
+import { useAuth } from "../context/AuthContext";
+import Spacing from "../components/Spacing";
 
 const profile = () => {
-  const [name, setName] = useState("");
+  const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
-  const client = useQueryClient();
+  const { authState, onLogin, onLogout, onRegister } = useAuth();
 
-  // const { mutate } = useMutation({
-  //   mutationFn: () => addToWatchList(id),
-  //   onSuccess: () => {
-  //     client.invalidateQueries({ queryKey: ["watchList"] });
-  //   },
-  // });
+  const login = async () => {
+    const result = await onLogin!(userName, password);
+    setUserName("");
+    setPassword("");
+    if (result && result.error) {
+      alert(result.msg);
+    } else alert("you have been logged in");
+  };
 
-  const hadnleLogin = () => {
-    // const { data: LoginData, isLoading } = useQuery({
-    //   queryKey: ["token"],
-    //   queryFn: () => {
-    //     sendLogin(name, password);
-    //   },
-    // });
-    console.log("you clicked");
+  const logout = async () => {
+    const result = await onLogout!();
+    if (result && result.error) {
+      alert(result.msg);
+    } else alert("You have been logged out");
+  };
+
+  const register = async () => {
+    const result = await onRegister!(userName, password);
+    if (result && result.error) {
+      alert(result.msg);
+    } else {
+      login();
+    }
   };
 
   return (
-    <View style={{ flexDirection: "column" }}>
+    <View style={styles.container}>
+      {authState.authenticated ? <Text> Wellcome </Text> : null}
+      <Spacing space={80} />
+      <Image
+        source={require("./../../assets/profile.png")}
+        style={styles.profileIcon}
+        resizeMode="contain"
+      />
       <View>
-        <Text>Name</Text>
+        <Text style={styles.text}>Name</Text>
         <TextInput
           style={styles.input}
-          value={name}
-          onChangeText={(val) => setName(val)}
+          value={userName}
+          onChangeText={(val) => setUserName(val)}
         />
       </View>
       <View>
-        <Text>password</Text>
+        <Text style={styles.text}>password</Text>
         <TextInput
           style={styles.input}
           value={password}
+          secureTextEntry={true}
           onChangeText={(val) => setPassword(val)}
         />
       </View>
-      <Button title="log in" onPress={() => hadnleLogin} />
+      <Button title="log in" onPress={login} />
+      {authState.authenticated ? null : (
+        <Button title="log out" onPress={logout} />
+      )}
     </View>
   );
 };
@@ -58,5 +78,18 @@ const styles = StyleSheet.create({
     width: 140,
     lineHeight: 20,
     backgroundColor: "rgba(151, 151, 151, 0.25)",
+  },
+  profileIcon: {
+    width: 200,
+    height: 200,
+  },
+  container: {
+    flexDirection: "column",
+    alignItems: "center",
+    gap: 20,
+  },
+  text: {
+    fontSize: 20,
+    fontWeight: 600,
   },
 });
