@@ -11,6 +11,6 @@ export function useProductInfo(barcode: string) {
       }
       return result;
     },
-    enabled: true,
+    enabled: !!barcode,
   });
 }

@@ -24,7 +24,8 @@ import Spacing from "../components/Spacing";
 const info = () => {
   const [search, setSearch] = useState("");
   const [scannerEnabled, setScannerEnabled] = useState(false);
-  const [barcode, setBarcode] = useState("");
+  const [barcode, setBarcode] = useState("20047214");
+  const space = "  ";
 
   const { data: productInfo, isError, isLoading } = useProductInfo(barcode);
 
@@ -52,7 +53,7 @@ const info = () => {
   }
 
   if (isLoading) {
-    <Text>Loading...</Text>;
+    return <Text>Loading...</Text>;
   }
 
   return (
@@ -75,12 +76,12 @@ const info = () => {
         <Button
           title="Search"
           onPress={() => {
-            setBarcode("20047214"), setSearch("");
+            setBarcode(search), setSearch(""); //modify
           }}
           color={"royalblue"}
         />
       )}
-      {isError ?? (
+      {isError && (
         <Text style={styles.textErorr}>Sorry we can't find the product</Text>
       )}
       {productInfo && (
@@ -95,52 +96,201 @@ const info = () => {
                       uri: productInfo.image.imageData,
                     }}
                     resizeMode="contain"
-                    style={{ width: "80%", height: "80%" }}
+                    style={{ width: 200, height: 300 }}
                   />
                 </View>
               )}
+              {isValid(productInfo.name) && (
+                <Text style={styles.textInformation}>
+                  Name:
+                  <Text style={styles.textInformationValue}>
+                    {space + productInfo.name}
+                  </Text>
+                </Text>
+              )}
+              {isValid(productInfo.barcode) && (
+                <Text style={styles.textInformation}>
+                  Barcode:
+                  <Text style={styles.textInformationValue}>
+                    {space + productInfo.barcode}
+                  </Text>
+                </Text>
+              )}
+              {isValid(productInfo.brandName) && (
+                <Text style={styles.textInformation}>
+                  Brand Name:
+                  <Text style={styles.textInformationValue}>
+                    {space + productInfo.brandName}
+                  </Text>
+                </Text>
+              )}
               {isValid(productInfo.distributor.names) && (
-                <Text>Distributors: {productInfo.distributor.names}</Text>
+                <Text style={styles.textInformation}>
+                  Distributors:
+                  <Text style={styles.textInformationValue}>
+                    {space + productInfo.distributor.names}
+                  </Text>
+                </Text>
               )}
               {isValid(productInfo.distributor.manufacturingPlaces) && (
-                <Text>
+                <Text style={styles.textInformation}>
                   Manufacturing places:
-                  {productInfo.distributor.manufacturingPlaces}
+                  <Text style={styles.textInformationValue}>
+                    {space + productInfo.distributor.manufacturingPlaces}
+                  </Text>
                 </Text>
               )}
               {isValid(productInfo.ingredient.names) && (
-                <Text>Ingredients: {productInfo.ingredient.names}</Text>
-              )}
-              {isValid(productInfo.ingredient.text) && (
-                <Text>Description: {productInfo.ingredient.text}</Text>
-              )}
-              {productInfo.macroNutrient.energyKcal && (
-                <Text>
-                  Distributors:
-                  {productInfo.macroNutrient.energyKcal.toString()}
+                <Text style={styles.textInformation}>
+                  Ingredients:
+                  <Text style={styles.textInformationValue}>
+                    {space + productInfo.ingredient.names}
+                  </Text>
                 </Text>
               )}
-              {/* <Text>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam
-                vitae lorem vitae turpis tincidunt scelerisque. Aenean id arcu
-                condimentum, vehicula ligula non, scelerisque felis. Proin neque
-                mi, viverra vel rutrum sit amet, vestibulum ut lectus. Proin
-                tincidunt ac orci in volutpat. Integer ac tristique tortor.
-                Phasellus pellentesque rhoncus neque non ultricies. Nulla quis
-                enim quis turpis commodo gravida. Nulla ac magna id libero
-                finibus gravida. Suspendisse volutpat at dolor sit amet rhoncus.
-                Nam sodales, velit eget viverra posuere, nulla lacus
-                sollicitudin neque, eget sagittis mi sapien ut justo. Proin nec
-                scelerisque nulla, eget vestibulum mi. Mauris finibus a ex in
-                imperdiet. Praesent eget nunc vehicula, aliquam ligula nec,
-                ultricies massa. Quisque scelerisque orci purus, ac malesuada
-                augue accumsan et. Cras lobortis sagittis eros sit amet
-                eleifend. Aenean congue dictum efficitur. Nulla quis nisl et
-                dolor lobortis mattis vitae quis libero. Pellentesque ex enim,
-                consectetur a luctus at, ullamcorper non eros. Ut ornare nisl
-                vitae orci mattis, quis placerat tellus hendrerit. Etiam
-                fringilla dictum lobortis. Suspendisse massa dolor, sodales id
-              </Text> */}
+              {isValid(productInfo.ingredient.text) && (
+                <Text style={styles.textInformation}>
+                  Description:
+                  <Text style={styles.textInformationValue}>
+                    {space + productInfo.ingredient.text}
+                  </Text>
+                </Text>
+              )}
+              {isValid(productInfo.expiresAt) && (
+                <Text style={styles.textInformation}>
+                  Expire date:
+                  <Text style={styles.textInformationValue}>
+                    {space + productInfo.expiresAt}
+                  </Text>
+                </Text>
+              )}
+              {productInfo.weightValue && (
+                <Text style={styles.textInformation}>
+                  Weight:
+                  <Text style={styles.textInformationValue}>
+                    {space + productInfo.weightValue.toString() + space}
+                    {productInfo.weightType}
+                  </Text>
+                </Text>
+              )}
+              {productInfo && (
+                <View style={{ alignItems: "center", padding: 10 }}>
+                  <Text
+                    style={[
+                      styles.textInformation,
+                      { fontSize: 20, color: "dimgray" },
+                    ]}
+                  >
+                    Nutritive values for 100g
+                  </Text>
+                </View>
+              )}
+              <View style={{ paddingLeft: "3%", gap: 8 }}>
+                {productInfo.macroNutrient.energyKcal && (
+                  <Text style={styles.textInformation}>
+                    Energy kcal:
+                    <Text style={styles.textInformationValue}>
+                      {space + productInfo.macroNutrient.energyKcal.toString()}
+                    </Text>
+                  </Text>
+                )}
+                {productInfo.macroNutrient.energyKJ && (
+                  <Text style={styles.textInformation}>
+                    Energy KJ:
+                    <Text style={styles.textInformationValue}>
+                      {space + productInfo.macroNutrient.energyKJ.toString()}
+                    </Text>
+                  </Text>
+                )}
+                {productInfo.macroNutrient.carbohydrates && (
+                  <Text style={styles.textInformation}>
+                    carbohydrates:
+                    <Text style={styles.textInformationValue}>
+                      {space +
+                        productInfo.macroNutrient.carbohydrates.toString() +
+                        space}
+                      {productInfo.weightType}
+                    </Text>
+                  </Text>
+                )}
+                {productInfo.macroNutrient.saturatedFats && (
+                  <Text style={styles.textInformation}>
+                    Saturated fats:
+                    <Text style={styles.textInformationValue}>
+                      {space +
+                        productInfo.macroNutrient.saturatedFats.toString() +
+                        space}
+                      {productInfo.weightType}
+                    </Text>
+                  </Text>
+                )}
+                {productInfo.macroNutrient.proteins && (
+                  <Text style={styles.textInformation}>
+                    proteins:
+                    <Text style={styles.textInformationValue}>
+                      {space +
+                        productInfo.macroNutrient.proteins.toString() +
+                        space}
+                      {productInfo.weightType}
+                    </Text>
+                  </Text>
+                )}
+                {productInfo.macroNutrient.fat && (
+                  <Text style={styles.textInformation}>
+                    fats:
+                    <Text style={styles.textInformationValue}>
+                      {space + productInfo.macroNutrient.fat.toString() + space}
+                      {productInfo.weightType}
+                    </Text>
+                  </Text>
+                )}
+                {productInfo.macroNutrient.salt && (
+                  <Text style={styles.textInformation}>
+                    salt:
+                    <Text style={styles.textInformationValue}>
+                      {space +
+                        productInfo.macroNutrient.salt.toString() +
+                        space}
+                      {productInfo.weightType}
+                    </Text>
+                  </Text>
+                )}
+
+                {productInfo.macroNutrient.sugars && (
+                  <Text style={styles.textInformation}>
+                    sugars:
+                    <Text style={styles.textInformationValue}>
+                      {space +
+                        productInfo.macroNutrient.sugars.toString() +
+                        space}
+                      {productInfo.weightType}
+                    </Text>
+                  </Text>
+                )}
+                {productInfo.microNutrient.vitamins && (
+                  <Text style={styles.textInformation}>
+                    Vitamins:
+                    <Text style={styles.textInformationValue}>
+                      {space +
+                        productInfo.microNutrient.vitamins.toString() +
+                        space}
+                      {productInfo.weightType}
+                    </Text>
+                  </Text>
+                )}
+                {productInfo.microNutrient.minerals && (
+                  <Text style={styles.textInformation}>
+                    Minerals:
+                    <Text style={styles.textInformationValue}>
+                      {space +
+                        productInfo.microNutrient.minerals.toString() +
+                        space}
+                      {productInfo.weightType}
+                    </Text>
+                  </Text>
+                )}
+              </View>
+              <Button title="Add to list" />
             </View>
           </ScrollView>
         </GestureHandlerRootView>
@@ -168,6 +318,14 @@ const styles = StyleSheet.create({
   textErorr: {
     fontWeight: "600",
     fontSize: 20,
+  },
+  textInformation: {
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+  textInformationValue: {
+    fontSize: 15,
+    fontWeight: "300",
   },
   container: {
     flex: 1,
