@@ -3,16 +3,13 @@ import React, { useState } from "react";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { useAnimatedStyle, withTiming } from "react-native-reanimated";
 import Animated from "react-native-reanimated";
-
-const ingredients = "Score A , good";
+import { mealType } from "../dataTypes/types";
 
 type mealProps = {
-  name: string;
-  calories: number;
-  distributor?: string;
+  mealItem: mealType;
 };
 
-const MealItem = ({ name, calories, distributor }: mealProps) => {
+const MealItem = ({ mealItem }: mealProps) => {
   const [expanded, setExpanded] = useState(false);
   const [height, setHeight] = useState(0);
 
@@ -36,22 +33,20 @@ const MealItem = ({ name, calories, distributor }: mealProps) => {
   return (
     <View style={styles.container}>
       <TouchableWithoutFeedback onPress={handleItemPress}>
-        <Text style={styles.name}>{name}</Text>
-        <Text style={styles.details}>
-          {calories} kcal , {distributor}
-        </Text>
+        <Text style={styles.name}>{mealItem.name}</Text>
+        <Text style={styles.details}>{mealItem.totalKCal} kcal</Text>
       </TouchableWithoutFeedback>
       <Animated.View style={[animatedStyle, { overflow: "hidden" }]}>
         <View onLayout={onLayout} style={{ position: "absolute" }}>
           <Text style={styles.detailsTitle}>Details</Text>
           <View style={styles.macrosContainer}>
-            <Text style={styles.macroText}>Proteins 28g ,</Text>
-            <Text style={styles.macroText}>Fats 30g ,</Text>
-            <Text style={styles.macroText}>Carbs 200g ,</Text>
-          </View>
-          <View style={styles.ingredientsContainer}>
-            <Text style={styles.ingredientTitle}>Ingredients: </Text>
-            <Text style={styles.ingredientText}>{ingredients}</Text>
+            <Text style={styles.macroText}>
+              Proteins {mealItem.proteins}g ,
+            </Text>
+            <Text style={styles.macroText}>Fats {mealItem.fats}g ,</Text>
+            <Text style={styles.macroText}>
+              Carbs {mealItem.carbohydrates}g
+            </Text>
           </View>
         </View>
       </Animated.View>
@@ -89,21 +84,5 @@ const styles = StyleSheet.create({
   macroText: {
     fontSize: 15,
     color: "dimgray",
-  },
-
-  ingredientsContainer: {
-    flexDirection: "column",
-    rowGap: 5,
-    paddingTop: 5,
-  },
-  ingredientTitle: {
-    fontWeight: "400",
-    fontStyle: "italic",
-    fontSize: 17,
-  },
-  ingredientText: {
-    fontSize: 15,
-    color: "dimgray",
-    paddingLeft: 10,
   },
 });

@@ -53,7 +53,7 @@ const info = () => {
   }
 
   if (isLoading) {
-    return <Text>Loading...</Text>;
+    return <ActivityIndicator />;
   }
 
   return (

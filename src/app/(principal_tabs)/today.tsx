@@ -1,4 +1,11 @@
-import { StyleSheet, View, Text, Image } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  Button,
+  ActivityIndicator,
+} from "react-native";
 import React, { useRef, useState } from "react";
 import CircularProgress from "react-native-circular-progress-indicator";
 import Spacing from "../components/Spacing";
@@ -10,56 +17,24 @@ import AddMeal from "../components/addMealButton";
 import BottomSheet, { BottomSheetBackdrop } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import AddMealModal from "../(modals)/addMealModal";
-
-const data = [
-  {
-    name: "pizza",
-    calories: 350,
-    distributor: "dominos",
-  },
-  {
-    name: "jamon",
-    calories: 250,
-    distributor: "lidl",
-  },
-  {
-    name: "banana",
-    calories: 100,
-    distributor: "kaufland",
-  },
-  {
-    name: "banana",
-    calories: 100,
-    distributor: "kaufland",
-  },
-  {
-    name: "banana",
-    calories: 100,
-    distributor: "kaufland",
-  },
-  {
-    name: "banana",
-    calories: 100,
-    distributor: "kaufland",
-  },
-  {
-    name: "banana",
-    calories: 100,
-    distributor: "kaufland",
-  },
-  {
-    name: "banana",
-    calories: 100,
-    distributor: "kaufland",
-  },
-];
+import Modal from "react-native-modal/dist/modal";
+import DeleteModal from "../components/deleteModal";
+import DeleteIcon from "../components/deleteIcon";
+import { useAuth } from "../context/AuthContext";
+import { useMeals } from "../hooks/use-meals";
 
 const today = () => {
   const [bar, setBar] = useState(0.2);
   const bottomSheetRef = useRef<BottomSheet>(null);
   const handleOpenBottomSheet = () => bottomSheetRef.current?.snapToIndex(0);
   const handleCloseBottomSheet = () => bottomSheetRef.current?.close();
+  const [isModalVisible, setModalVisible] = useState(false);
+  const { authState } = useAuth();
+  const { data: meals, isError, isLoading } = useMeals(authState.authenticated);
 
+  const toggleModal = () => {
+    setModalVisible(false);
+  };
   return (
     <GestureHandlerRootView>
       <View style={styles.container}>
@@ -120,8 +95,23 @@ const today = () => {
         <View style={styles.mealsTitleContainer}>
           <Text style={styles.mealsTodayTitle}>Meals today</Text>
           <AddMeal handleOpenBottomSheet={handleOpenBottomSheet} />
+          <DeleteIcon setModalVisible={setModalVisible} />
         </View>
-        <Meals />
+        {isLoading && <ActivityIndicator />}
+        {isError && (
+          <Text style={styles.erorrText}>
+            A unexpected erorr has occured , please try again
+          </Text>
+        )}
+        <Meals meals={meals} />
+        <Modal
+          isVisible={isModalVisible}
+          backdropTransitionOutTiming={0}
+          animationIn={"fadeIn"}
+          animationOut={"fadeOut"}
+        >
+          <DeleteModal toggleModal={toggleModal} />
+        </Modal>
       </View>
       <AddMealModal
         ref={bottomSheetRef}
@@ -152,6 +142,12 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingBottom: 10,
     fontSize: 25,
+  },
+  erorrText: {
+    fontWeight: "600",
+    fontSize: 20,
+    padding: 10,
+    color: "red",
   },
   kcalCount: {
     flexDirection: "row",

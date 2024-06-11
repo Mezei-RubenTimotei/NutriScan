@@ -5,6 +5,16 @@ export type goalResult = {
   proteins: number;
 };
 
+export type mealType = {
+  id: string;
+  userId: string;
+  name: string;
+  totalKCal: number;
+  carbohydrates: number;
+  proteins: number;
+  fats: number;
+};
+
 export type scanResult = {
   data: {
     id: string;

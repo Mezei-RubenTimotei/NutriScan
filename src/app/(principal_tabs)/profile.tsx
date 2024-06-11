@@ -60,9 +60,9 @@ const profile = () => {
           onChangeText={(val) => setPassword(val)}
         />
       </View>
-      <Button title="log in" onPress={login} />
+      <Button title="log out" onPress={logout} />
       {authState.authenticated ? null : (
-        <Button title="log out" onPress={logout} />
+        <Button title="log in" onPress={login} />
       )}
     </View>
   );

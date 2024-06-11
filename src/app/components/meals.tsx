@@ -1,63 +1,18 @@
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import MealItem from "./mealItem";
-import { ScrollView } from "react-native-reanimated/lib/typescript/Animated";
+import { mealType } from "../dataTypes/types";
 
-const data = [
-  {
-    name: "pizza",
-    calories: 350,
-    distributor: "dominos",
-  },
-  {
-    name: "jamon",
-    calories: 250,
-    distributor: "lidl",
-  },
-  {
-    name: "banana",
-    calories: 100,
-    distributor: "kaufland",
-  },
-  {
-    name: "banana",
-    calories: 100,
-    distributor: "kaufland",
-  },
-  {
-    name: "banana",
-    calories: 100,
-    distributor: "kaufland",
-  },
-  {
-    name: "banana",
-    calories: 100,
-    distributor: "kaufland",
-  },
-  {
-    name: "banana",
-    calories: 100,
-    distributor: "kaufland",
-  },
-  {
-    name: "banana",
-    calories: 100,
-    distributor: "kaufland",
-  },
-];
+type Props = {
+  meals: mealType[];
+};
 
-const Meals = () => {
+const Meals = ({ meals }: Props) => {
   return (
     <View style={styles.mealsContainer}>
       <FlatList
-        data={data}
-        renderItem={({ item }) => (
-          <MealItem
-            name={item.name}
-            calories={item.calories}
-            distributor={item.distributor}
-          />
-        )}
+        data={meals}
+        renderItem={({ item }) => <MealItem mealItem={item} />}
         contentContainerStyle={styles.listMealsStyle}
       ></FlatList>
     </View>
