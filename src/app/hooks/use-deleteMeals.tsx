@@ -1,11 +1,10 @@
-import { QueryClient, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteAllMeals } from "../api/deleteAllMeals";
 
-export function useDeleteMeals(deleted: boolean) {
+export function useDeleteMeals() {
   const queryClient = useQueryClient();
-  return useQuery({
-    queryKey: [],
-    queryFn: async () => {
+  return useMutation({
+    mutationFn: async () => {
       const result = await deleteAllMeals();
       queryClient.invalidateQueries({ queryKey: ["meals"] });
       if (!result) {
@@ -13,6 +12,5 @@ export function useDeleteMeals(deleted: boolean) {
       }
       console.log("the meals for the user " + result.id + " are deleted");
     },
-    enabled: !!deleted,
   });
 }

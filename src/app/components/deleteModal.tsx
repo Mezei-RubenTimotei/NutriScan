@@ -8,10 +8,9 @@ type Props = {
 };
 
 const DeleteModal = ({ toggleModal }: Props) => {
-  const [isDeleted, setIsDeleted] = useState(false);
-  useDeleteMeals(isDeleted);
+  const deleteAllMeals = useDeleteMeals();
   const handleDelete = () => {
-    setIsDeleted(true);
+    deleteAllMeals.mutate();
     toggleModal();
   };
   return (

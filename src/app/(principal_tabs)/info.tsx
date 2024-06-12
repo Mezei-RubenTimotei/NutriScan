@@ -6,12 +6,12 @@ import {
   TextInput,
   Image,
   View,
+  TextInputComponent,
 } from "react-native";
 import { Camera, CameraType } from "expo-camera/legacy";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import React, { useEffect, useState } from "react";
-import { Points } from "@shopify/react-native-skia";
 import { getProductInfo } from "../api/getProductInfo";
 import { useProductInfo } from "../hooks/use-product-info";
 import {
@@ -20,17 +20,38 @@ import {
 } from "react-native-gesture-handler";
 import { isValid } from "../helperFunctions/isValid";
 import Spacing from "../components/Spacing";
+import { mealType } from "../dataTypes/types";
+import { usePostMeal } from "../hooks/use-postMeal";
+import reduceMealAmount from "../helperFunctions/reduceMealAmount";
 
 const info = () => {
   const [search, setSearch] = useState("");
   const [scannerEnabled, setScannerEnabled] = useState(false);
   const [barcode, setBarcode] = useState("20047214");
+  const [grams, setGrams] = useState("");
   const space = "  ";
 
   const { data: productInfo, isError, isLoading } = useProductInfo(barcode);
+  const { mutate } = usePostMeal();
 
   const [permission, requestPermission] = Camera.useCameraPermissions();
   requestPermission();
+
+  const handleAddToList = () => {
+    if (isNaN(+grams)) alert("please type an amount");
+    else {
+      const mealValues100g: mealType = {
+        name: productInfo.name,
+        totalKCal: productInfo.macroNutrient.energyKcal,
+        carbohydrates: productInfo.macroNutrient.carbohydrates,
+        proteins: productInfo.macroNutrient.proteins,
+        fats: productInfo.macroNutrient.fat,
+      };
+      const mealToAdd = reduceMealAmount(mealValues100g, parseInt(grams));
+      mutate(mealToAdd);
+      setGrams("");
+    }
+  };
 
   if (scannerEnabled) {
     return (
@@ -290,7 +311,14 @@ const info = () => {
                   </Text>
                 )}
               </View>
-              <Button title="Add to list" />
+              <TextInput
+                style={styles.input}
+                placeholder="grams to add"
+                placeholderTextColor={"#9c9c9c"}
+                value={grams}
+                onChangeText={(value) => setGrams(value)}
+              />
+              <Button title="Add to list" onPress={handleAddToList} />
             </View>
           </ScrollView>
         </GestureHandlerRootView>

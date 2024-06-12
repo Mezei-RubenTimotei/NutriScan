@@ -13,7 +13,7 @@ const profile = () => {
     const result = await onLogin!(userName, password);
     setUserName("");
     setPassword("");
-    if (result && result.error) {
+    if (!result && result.error) {
       alert(result.msg);
     } else alert("you have been logged in");
   };

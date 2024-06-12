@@ -1,9 +1,11 @@
 import { View, Text, StyleSheet, Button, Pressable } from "react-native";
-import React, { forwardRef, useCallback, useMemo } from "react";
+import React, { forwardRef, useCallback, useMemo, useState } from "react";
 import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetTextInput,
 } from "@gorhom/bottom-sheet";
+import { usePostMeal } from "../hooks/use-postMeal";
+import { mealType } from "../dataTypes/types";
 
 type Props = {
   handleCloseBottomSheet: () => void;
@@ -11,10 +13,19 @@ type Props = {
 
 type Ref = BottomSheet;
 
+const emptyMeal = {
+  name: "",
+  totalKCal: "",
+  proteins: "",
+  carbohydrates: "",
+  fats: "",
+};
+
 const AddMealModal = forwardRef<Ref, Props>(
   ({ handleCloseBottomSheet }: Props, ref) => {
     const snapPoints = useMemo(() => ["65%", "80%"], []);
-
+    const [meal, setMeal] = useState(emptyMeal);
+    const { mutate } = usePostMeal();
     const renderBackdrop = useCallback(
       (props: any) => (
         <BottomSheetBackdrop
@@ -26,9 +37,39 @@ const AddMealModal = forwardRef<Ref, Props>(
       []
     );
 
+    const validData = ({
+      name,
+      totalKCal,
+      carbohydrates,
+      proteins,
+      fats,
+    }: typeof emptyMeal) => {
+      if (
+        name != "" &&
+        !isNaN(+totalKCal) &&
+        !isNaN(+carbohydrates) &&
+        !isNaN(+proteins) &&
+        !isNaN(+fats)
+      )
+        return true;
+      return false;
+    };
+
     const handleAddMeal = () => {
-      // add in data
-      handleCloseBottomSheet();
+      if (validData(meal)) {
+        const mealToAdd: mealType = {
+          name: meal.name,
+          totalKCal: parseInt(meal.totalKCal),
+          carbohydrates: parseInt(meal.carbohydrates),
+          proteins: parseInt(meal.proteins),
+          fats: parseInt(meal.fats),
+        };
+        mutate(mealToAdd);
+        setMeal(emptyMeal);
+        handleCloseBottomSheet();
+      } else {
+        alert("invalid data");
+      }
     };
 
     return (
@@ -45,23 +86,45 @@ const AddMealModal = forwardRef<Ref, Props>(
         <View style={styles.bodyContainer}>
           <View style={styles.lineContainer}>
             <Text style={styles.name}>Name</Text>
-            <BottomSheetTextInput style={styles.input} />
+            <BottomSheetTextInput
+              style={styles.input}
+              value={meal.name}
+              onChangeText={(value) => setMeal({ ...meal, name: value })}
+            />
           </View>
           <View style={styles.lineContainer}>
             <Text style={styles.name}>Kalories</Text>
-            <BottomSheetTextInput style={styles.input} />
+            <BottomSheetTextInput
+              style={styles.input}
+              value={meal.totalKCal}
+              onChangeText={(value) => setMeal({ ...meal, totalKCal: value })}
+            />
           </View>
           <View style={styles.lineContainer}>
             <Text style={styles.name}>Proteins</Text>
-            <BottomSheetTextInput style={styles.input} />
+            <BottomSheetTextInput
+              style={styles.input}
+              value={meal.proteins}
+              onChangeText={(value) => setMeal({ ...meal, proteins: value })}
+            />
           </View>
           <View style={styles.lineContainer}>
             <Text style={styles.name}>Carbs</Text>
-            <BottomSheetTextInput style={styles.input} />
+            <BottomSheetTextInput
+              style={styles.input}
+              value={meal.carbohydrates}
+              onChangeText={(value) =>
+                setMeal({ ...meal, carbohydrates: value })
+              }
+            />
           </View>
           <View style={styles.lineContainer}>
             <Text style={styles.name}>Fats</Text>
-            <BottomSheetTextInput style={styles.input} />
+            <BottomSheetTextInput
+              style={styles.input}
+              value={meal.fats}
+              onChangeText={(value) => setMeal({ ...meal, fats: value })}
+            />
           </View>
           <View style={styles.buttonContainer}>
             <Pressable style={styles.button} onPress={handleAddMeal}>

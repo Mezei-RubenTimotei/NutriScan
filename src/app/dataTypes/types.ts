@@ -6,8 +6,6 @@ export type goalResult = {
 };
 
 export type mealType = {
-  id: string;
-  userId: string;
   name: string;
   totalKCal: number;
   carbohydrates: number;
@@ -27,14 +25,14 @@ export type scanResult = {
       text: string;
     };
     macroNutrient: {
-      carbohydrates: Number;
-      energyKcal: Number;
-      energyKJ: Number;
-      fat: Number;
-      proteins: Number;
-      salt: Number;
-      saturatedFats: Number;
-      sugars: Number;
+      carbohydrates: number;
+      energyKcal: number;
+      energyKJ: number;
+      fat: number;
+      proteins: number;
+      salt: number;
+      saturatedFats: number;
+      sugars: number;
     };
     microNutrient: {
       vitamins: string;

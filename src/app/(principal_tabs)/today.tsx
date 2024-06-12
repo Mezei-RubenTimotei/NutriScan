@@ -21,7 +21,7 @@ import Modal from "react-native-modal/dist/modal";
 import DeleteModal from "../components/deleteModal";
 import DeleteIcon from "../components/deleteIcon";
 import { useAuth } from "../context/AuthContext";
-import { useMeals } from "../hooks/use-meals";
+import { useGetMeals } from "../hooks/use-getMeals";
 
 const today = () => {
   const [bar, setBar] = useState(0.2);
@@ -30,7 +30,11 @@ const today = () => {
   const handleCloseBottomSheet = () => bottomSheetRef.current?.close();
   const [isModalVisible, setModalVisible] = useState(false);
   const { authState } = useAuth();
-  const { data: meals, isError, isLoading } = useMeals(authState.authenticated);
+  const {
+    data: meals,
+    isError,
+    isLoading,
+  } = useGetMeals(authState.authenticated);
 
   const toggleModal = () => {
     setModalVisible(false);
