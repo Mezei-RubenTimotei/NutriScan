@@ -7,9 +7,10 @@ import ActivityBtn from "../components/activityBtn";
 import SelectActivityModal from "../(modals)/selectActivityModal";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import tdeeCalculator from "../helperFunctions/tdeeCalculator";
-import { goalResult } from "../dataTypes/types";
+import { goalResultType } from "../dataTypes/types";
 import Meals from "../components/meals";
 import ResultGoal from "../components/goalResultList";
+import { useUpdateGoal } from "../hooks/use-updateGoal";
 
 const list = () => {
   const [gender, setGender] = useState("male");
@@ -18,16 +19,18 @@ const list = () => {
   const [height, setHeight] = useState(0);
   const [activity, setActivity] = useState("Select Item");
   const [goalOption, setGoalOption] = useState("Maintenance");
-  const [goalResult, setGoalResult] = useState<goalResult | null>(null);
+  const [goalResult, setGoalResult] = useState<goalResultType | null>(null);
   const bottomSheetModalRef = useRef<BottomSheet>(null);
+
+  const { mutate } = useUpdateGoal();
 
   const handleOpenActivityBtn = () =>
     bottomSheetModalRef.current.snapToIndex(0);
 
   const handleCloseActivityBtn = () => bottomSheetModalRef.current.close();
 
-  const handleSetGoal = () => {
-    // backend request
+  const handleSetGoal = (goalResult: goalResultType) => {
+    mutate(goalResult);
   };
 
   const handleReset = () => {
@@ -116,7 +119,10 @@ const list = () => {
                 </Pressable>
               </View>
               <View style={[styles.buttonContainer, { width: "40%" }]}>
-                <Pressable style={styles.button} onPress={handleSetGoal}>
+                <Pressable
+                  style={styles.button}
+                  onPress={() => handleSetGoal(goalResult)}
+                >
                   <Text style={styles.buttonText}>Set Goal</Text>
                 </Pressable>
               </View>

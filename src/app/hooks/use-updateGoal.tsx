@@ -3,13 +3,13 @@ import { deleteAllMeals } from "../api/meals/deleteAllMeals";
 import { getGoal } from "../api/goal/getGoal";
 import { useGetGoal } from "./use-getGoals";
 import { postGoal } from "../api/goal/postGoal";
-import { goalResult } from "../dataTypes/types";
+import { goalResultType } from "../dataTypes/types";
 import { putGoal } from "../api/goal/putGoal";
 
 export function useUpdateGoal() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (goal: goalResult) => {
+    mutationFn: async (goal: goalResultType) => {
       let postResult;
       try {
         await getGoal();

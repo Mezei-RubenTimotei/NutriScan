@@ -1,6 +1,6 @@
-import { goalResult, mealType } from "../dataTypes/types";
+import { goalResultType, mealType } from "../dataTypes/types";
 
-export default function calculateProgress(meals: mealType[]): goalResult {
+export default function calculateProgress(meals: mealType[]): goalResultType {
   return meals?.reduce(
     (accumulator, currentMeal) => ({
       totalKCal: accumulator.totalKCal + currentMeal.totalKCal,

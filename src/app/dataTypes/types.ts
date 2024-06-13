@@ -1,4 +1,4 @@
-export type goalResult = {
+export type goalResultType = {
   totalKCal: number;
   fats: number;
   carbohydrates: number;
