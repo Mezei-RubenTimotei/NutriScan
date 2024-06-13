@@ -108,7 +108,7 @@ const list = () => {
         )}
         {goalResult ? (
           <>
-            <ResultGoal key={goalResult.kcal} goalResult={goalResult} />
+            <ResultGoal key={goalResult.totalKCal} goalResult={goalResult} />
             <View style={styles.buttonsContainer}>
               <View style={[styles.buttonContainer, { width: "40%" }]}>
                 <Pressable style={styles.button} onPress={handleReset}>

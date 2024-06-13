@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteAllMeals } from "../api/deleteAllMeals";
-import { postMeal } from "../api/postMeal";
 import { mealType } from "../dataTypes/types";
+import { postMeal } from "../api/meals/postMeal";
 
 export function usePostMeal() {
   const queryClient = useQueryClient();
@@ -15,19 +14,7 @@ export function usePostMeal() {
         "the meal " + result.name + " is added for the user " + result.id
       );
     },
-    onMutate: async (meal: mealType) => {
-      await queryClient.cancelQueries({ queryKey: ["meals"] });
-
-      const previousData = queryClient.getQueryData(["meals"]);
-
-      queryClient.setQueriesData({ queryKey: ["meals"] }, { meal });
-
-      return { previousData };
-    },
-    onError: (_, __, context) => {
-      queryClient.setQueryData(["meals"], context.previousData);
-    },
-    onSettled: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["meals"] });
     },
   });

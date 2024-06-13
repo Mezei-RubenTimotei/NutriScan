@@ -9,6 +9,7 @@ import { mealType } from "../dataTypes/types";
 
 type Props = {
   handleCloseBottomSheet: () => void;
+  addMealMutation: (value: mealType) => void;
 };
 
 type Ref = BottomSheet;
@@ -22,10 +23,9 @@ const emptyMeal = {
 };
 
 const AddMealModal = forwardRef<Ref, Props>(
-  ({ handleCloseBottomSheet }: Props, ref) => {
+  ({ handleCloseBottomSheet, addMealMutation }: Props, ref) => {
     const snapPoints = useMemo(() => ["65%", "80%"], []);
     const [meal, setMeal] = useState(emptyMeal);
-    const { mutate } = usePostMeal();
     const renderBackdrop = useCallback(
       (props: any) => (
         <BottomSheetBackdrop
@@ -64,7 +64,7 @@ const AddMealModal = forwardRef<Ref, Props>(
           proteins: parseInt(meal.proteins),
           fats: parseInt(meal.fats),
         };
-        mutate(mealToAdd);
+        addMealMutation(mealToAdd);
         setMeal(emptyMeal);
         handleCloseBottomSheet();
       } else {

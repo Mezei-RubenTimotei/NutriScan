@@ -1,6 +1,6 @@
 import axios from "axios";
 import { API_URL } from "../context/AuthContext";
-import { goalResult, scanResult } from "../dataTypes/types";
+import { scanResult } from "../dataTypes/types";
 
 export const getProductInfo = async (barcode: string) => {
   try {

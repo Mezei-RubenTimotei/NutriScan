@@ -6,10 +6,10 @@ type macroProps = {
   name: string;
   progress: number;
   color?: string;
-  kcalLeft: number;
+  gramsLeft: number;
 };
 
-const Macro = ({ name, progress, color, kcalLeft }: macroProps) => {
+const Macro = ({ name, progress, color, gramsLeft }: macroProps) => {
   return (
     <View style={styles.macro}>
       <Text style={styles.macroNameText}>{name}</Text>
@@ -20,7 +20,7 @@ const Macro = ({ name, progress, color, kcalLeft }: macroProps) => {
         animationType="timing"
         color={color}
       />
-      <Text style={styles.macroLeft}>{kcalLeft}g left</Text>
+      <Text style={styles.macroLeft}>{gramsLeft}g left</Text>
     </View>
   );
 };

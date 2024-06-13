@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteAllMeals } from "../api/deleteAllMeals";
+import { deleteAllMeals } from "../api/meals/deleteAllMeals";
 
 export function useDeleteMeals() {
   const queryClient = useQueryClient();

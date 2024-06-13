@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { getMeals } from "../api/getMeals";
 import { mealType } from "../dataTypes/types";
+import { getMeals } from "../api/meals/getMeals";
 
 export function useGetMeals(auth: boolean) {
   return useQuery({

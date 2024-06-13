@@ -17,9 +17,9 @@ type Props = {
 
 function kcalToMacros(kcal: number): goalResult {
   return {
-    kcal: kcal,
+    totalKCal: kcal,
     fats: Math.round((0.35 * kcal) / 9),
-    carbs: Math.round((0.35 * kcal) / 4),
+    carbohydrates: Math.round((0.35 * kcal) / 4),
     proteins: Math.round((0.3 * kcal) / 4),
   };
 }

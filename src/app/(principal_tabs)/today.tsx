@@ -6,7 +6,7 @@ import {
   Button,
   ActivityIndicator,
 } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import CircularProgress from "react-native-circular-progress-indicator";
 import Spacing from "../components/Spacing";
 import Macro from "../components/macros";
@@ -22,6 +22,10 @@ import DeleteModal from "../components/deleteModal";
 import DeleteIcon from "../components/deleteIcon";
 import { useAuth } from "../context/AuthContext";
 import { useGetMeals } from "../hooks/use-getMeals";
+import { useGetGoal } from "../hooks/use-getGoals";
+import calculateProgress from "../helperFunctions/calculateProgress";
+import { usePostMeal } from "../hooks/use-postMeal";
+import { mealType } from "../dataTypes/types";
 
 const today = () => {
   const [bar, setBar] = useState(0.2);
@@ -33,12 +37,62 @@ const today = () => {
   const {
     data: meals,
     isError,
-    isLoading,
+    isLoading: isLoadingMeals,
   } = useGetMeals(authState.authenticated);
+
+  const { mutate: addMealMutation } = usePostMeal();
+  const { data: userGoal, isLoading: loadingGoal } = useGetGoal(
+    authState.authenticated
+  );
+
+  const handleCircleValue = (): number => {
+    return Math.min(calculateProgress(meals).totalKCal, userGoal.totalKCal);
+  };
+
+  const handleRemainingKcal = () => {
+    const kcalLeft = userGoal.totalKCal - calculateProgress(meals).totalKCal;
+    return kcalLeft > 0 ? kcalLeft : 0;
+  };
 
   const toggleModal = () => {
     setModalVisible(false);
   };
+
+  const handleMacroLeft = (macroName: string): number => {
+    if (!status) return 0;
+    switch (macroName) {
+      case "carbs":
+        const carbsLeft =
+          userGoal.carbohydrates - calculateProgress(meals).carbohydrates;
+        return carbsLeft > 0 ? carbsLeft : 0;
+      case "fats":
+        const fatsLeft = userGoal.fats - calculateProgress(meals).fats;
+        return fatsLeft > 0 ? fatsLeft : 0;
+      case "proteins":
+        const proteinsLeft =
+          userGoal.proteins - calculateProgress(meals).proteins;
+        return proteinsLeft > 0 ? proteinsLeft : 0;
+      default:
+        return 0;
+    }
+  };
+
+  const handleProgressMacro = (macroName: string): number => {
+    if (!status) return 0.5;
+    switch (macroName) {
+      case "carbs":
+        return calculateProgress(meals).carbohydrates / userGoal.carbohydrates;
+      case "fats":
+        return calculateProgress(meals).fats / userGoal.fats;
+      case "proteins":
+        return calculateProgress(meals).proteins / userGoal.proteins;
+      default:
+        return 0;
+    }
+  };
+
+  const status = !loadingGoal && !isLoadingMeals;
+
   return (
     <GestureHandlerRootView>
       <View style={styles.container}>
@@ -54,11 +108,11 @@ const today = () => {
                   style={styles.targetIconStyle}
                   resizeMode="contain"
                 />
-                <Text style={styles.countKcal}>1200</Text>
+                <Text style={styles.countKcal}>{userGoal?.totalKCal ?? 0}</Text>
                 <Text style={styles.kcal}>Kcal</Text>
               </View>
               <Spacing space={25} />
-              <Text style={styles.targetTitle}>Eaten</Text>
+              <Text style={styles.targetTitle}>Left</Text>
               <Spacing space={8} />
               <View style={styles.targetContainer}>
                 <Image
@@ -66,23 +120,29 @@ const today = () => {
                   style={styles.eatenIconStyle}
                   resizeMode="contain"
                 />
-                <Text style={styles.countKcal}>1200</Text>
+                <Text style={styles.countKcal}>
+                  {!status ? 0 : handleRemainingKcal()}
+                </Text>
                 <Text style={styles.kcal}>Kcal</Text>
               </View>
             </View>
             <View style={styles.rightSide}>
-              <CircularProgress
-                radius={80}
-                value={2348}
-                maxValue={3000}
-                title="Kcal left"
-                titleColor={"gray"}
-                titleStyle={{ fontWeight: "500" }}
-                activeStrokeColor={"#2465FD"}
-                activeStrokeSecondaryColor={"#C25AFF"}
-                inActiveStrokeOpacity={0.2}
-                initialValue={0}
-              />
+              {!status ? (
+                <ActivityIndicator />
+              ) : (
+                <CircularProgress
+                  radius={80}
+                  value={handleCircleValue()}
+                  maxValue={userGoal.totalKCal}
+                  title="Kcal" //"Complete"
+                  titleColor={"gray"}
+                  titleStyle={{ fontWeight: "500" }}
+                  activeStrokeColor={"#2465FD"}
+                  activeStrokeSecondaryColor={"#C25AFF"}
+                  inActiveStrokeOpacity={0.2}
+                  initialValue={0}
+                />
+              )}
             </View>
           </View>
           <Spacing space={15} />
@@ -91,9 +151,23 @@ const today = () => {
           </View>
           <Spacing space={30} />
           <View style={styles.bars}>
-            <Macro name="carbs" progress={bar} kcalLeft={102} />
-            <Macro name="carbs" progress={0.4} color="#ff7c7c" kcalLeft={42} />
-            <Macro name="carbs" progress={0.7} color="#ffbe5b" kcalLeft={2} />
+            <Macro
+              name="carbs"
+              progress={handleProgressMacro("carbs")}
+              gramsLeft={handleMacroLeft("carbs")}
+            />
+            <Macro
+              name="proteins"
+              progress={handleProgressMacro("proteins")}
+              color="#ff7c7c"
+              gramsLeft={handleMacroLeft("proteins")}
+            />
+            <Macro
+              name="fats"
+              progress={handleProgressMacro("fats")}
+              color="#ffbe5b"
+              gramsLeft={handleMacroLeft("fats")}
+            />
           </View>
         </View>
         <View style={styles.mealsTitleContainer}>
@@ -101,7 +175,7 @@ const today = () => {
           <AddMeal handleOpenBottomSheet={handleOpenBottomSheet} />
           <DeleteIcon setModalVisible={setModalVisible} />
         </View>
-        {isLoading && <ActivityIndicator />}
+        {isLoadingMeals && <ActivityIndicator />}
         {isError && (
           <Text style={styles.erorrText}>
             A unexpected erorr has occured , please try again
@@ -120,6 +194,7 @@ const today = () => {
       <AddMealModal
         ref={bottomSheetRef}
         handleCloseBottomSheet={handleCloseBottomSheet}
+        addMealMutation={addMealMutation}
       />
     </GestureHandlerRootView>
   );

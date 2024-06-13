@@ -1,7 +1,7 @@
 export type goalResult = {
-  kcal: number;
+  totalKCal: number;
   fats: number;
-  carbs: number;
+  carbohydrates: number;
   proteins: number;
 };
 

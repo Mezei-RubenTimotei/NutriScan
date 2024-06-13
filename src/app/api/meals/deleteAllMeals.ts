@@ -1,6 +1,5 @@
 import axios from "axios";
-import { API_URL } from "../context/AuthContext";
-import { mealType } from "../dataTypes/types";
+import { API_URL } from "../../context/AuthContext";
 
 export const deleteAllMeals = async () => {
   try {
