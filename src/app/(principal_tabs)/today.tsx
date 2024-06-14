@@ -46,7 +46,9 @@ const today = () => {
   );
 
   const handleCircleValue = (): number => {
-    return Math.min(calculateProgress(meals).totalKCal, userGoal.totalKCal);
+    if (calculateProgress(meals).totalKCal > userGoal.totalKCal)
+      return userGoal.totalKCal;
+    return calculateProgress(meals).totalKCal;
   };
 
   const handleRemainingKcal = () => {
@@ -108,7 +110,9 @@ const today = () => {
                   style={styles.targetIconStyle}
                   resizeMode="contain"
                 />
-                <Text style={styles.countKcal}>{userGoal?.totalKCal ?? 0}</Text>
+                <Text style={styles.countKcal}>
+                  {!status ? 0 : userGoal.totalKCal}
+                </Text>
                 <Text style={styles.kcal}>Kcal</Text>
               </View>
               <Spacing space={25} />
@@ -131,6 +135,7 @@ const today = () => {
                 <ActivityIndicator />
               ) : (
                 <CircularProgress
+                  key={userGoal.totalKCal}
                   radius={80}
                   value={handleCircleValue()}
                   maxValue={userGoal.totalKCal}

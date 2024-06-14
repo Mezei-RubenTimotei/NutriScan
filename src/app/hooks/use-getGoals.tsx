@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { goalResult, mealType } from "../dataTypes/types";
+import { goalResultType } from "../dataTypes/types";
 import { getGoal } from "../api/goal/getGoal";
 
 export function useGetGoal(auth: boolean) {
@@ -11,7 +11,7 @@ export function useGetGoal(auth: boolean) {
       if (!result) {
         return Promise.reject("goal not found");
       }
-      return result as goalResult;
+      return result as goalResultType;
     },
     enabled: !!auth,
   });

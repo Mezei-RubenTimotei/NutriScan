@@ -17,11 +17,13 @@ export function useUpdateGoal() {
         postResult = await postGoal(goal);
         queryClient.setQueriesData({ queryKey: ["goal"] }, goal);
       }
-      const putResult = putGoal(goal);
-      queryClient.invalidateQueries({ queryKey: ["goal"] });
+      const putResult = await putGoal(goal);
       if (!putResult && !postResult) {
         return Promise.reject("unexpected error");
       }
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["goal"] });
     },
   });
 }

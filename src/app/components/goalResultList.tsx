@@ -2,18 +2,23 @@ import { FlatList, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import MealItem from "./mealItem";
 import { ScrollView } from "react-native-reanimated/lib/typescript/Animated";
-import { goalResult } from "../dataTypes/types";
+import { goalResultType } from "../dataTypes/types";
 
 type Props = {
-  goalResult: goalResult;
+  goalResult: goalResultType;
 };
 
 const ResultGoal = ({ goalResult }: Props) => {
+  const displayProperty = (propName: string) => {
+    if (propName == "carbohydrates") return "carbs";
+    else if (propName == "totalKCal") return "Kcal";
+    return propName;
+  };
   return (
     <View style={styles.Container}>
       {Object.entries(goalResult).map(([key, value]) => (
-        <View style={styles.line}>
-          <Text style={styles.text}>{key}</Text>
+        <View key={key} style={styles.line}>
+          <Text style={styles.text}>{displayProperty(key)}</Text>
           <Text style={styles.text}>{value}</Text>
         </View>
       ))}

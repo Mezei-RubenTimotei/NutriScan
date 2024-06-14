@@ -22,7 +22,7 @@ const list = () => {
   const [goalResult, setGoalResult] = useState<goalResultType | null>(null);
   const bottomSheetModalRef = useRef<BottomSheet>(null);
 
-  const { mutate } = useUpdateGoal();
+  const { mutate, isSuccess } = useUpdateGoal();
 
   const handleOpenActivityBtn = () =>
     bottomSheetModalRef.current.snapToIndex(0);
@@ -31,6 +31,7 @@ const list = () => {
 
   const handleSetGoal = (goalResult: goalResultType) => {
     mutate(goalResult);
+    if (isSuccess) alert("you goal is set");
   };
 
   const handleReset = () => {
@@ -111,7 +112,7 @@ const list = () => {
         )}
         {goalResult ? (
           <>
-            <ResultGoal key={goalResult.totalKCal} goalResult={goalResult} />
+            <ResultGoal goalResult={goalResult} />
             <View style={styles.buttonsContainer}>
               <View style={[styles.buttonContainer, { width: "40%" }]}>
                 <Pressable style={styles.button} onPress={handleReset}>
