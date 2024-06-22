@@ -27,7 +27,7 @@ import reduceMealAmount from "../helperFunctions/reduceMealAmount";
 const info = () => {
   const [search, setSearch] = useState("");
   const [scannerEnabled, setScannerEnabled] = useState(false);
-  const [barcode, setBarcode] = useState("20047214");
+  const [barcode, setBarcode] = useState(""); //20047214
   const [grams, setGrams] = useState("");
   const space = "  ";
 

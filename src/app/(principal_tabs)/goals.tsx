@@ -12,7 +12,7 @@ import Meals from "../components/meals";
 import ResultGoal from "../components/goalResultList";
 import { useUpdateGoal } from "../hooks/use-updateGoal";
 
-const list = () => {
+const Goal = () => {
   const [gender, setGender] = useState("male");
   const [age, setAge] = useState(0);
   const [weight, setWeight] = useState(0);
@@ -141,7 +141,7 @@ const list = () => {
   );
 };
 
-export default list;
+export default Goal;
 
 const styles = StyleSheet.create({
   titleContainer: {

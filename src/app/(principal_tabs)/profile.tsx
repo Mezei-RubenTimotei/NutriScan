@@ -7,7 +7,7 @@ import Spacing from "../components/Spacing";
 const profile = () => {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
-  const { authState, onLogin, onLogout, onRegister } = useAuth();
+  const { authState, onLogin, onLogout } = useAuth();
 
   const login = async () => {
     const result = await onLogin!(userName, password);
@@ -23,15 +23,6 @@ const profile = () => {
     if (result && result.error) {
       alert(result.msg);
     } else alert("You have been logged out");
-  };
-
-  const register = async () => {
-    const result = await onRegister!(userName, password);
-    if (result && result.error) {
-      alert(result.msg);
-    } else {
-      login();
-    }
   };
 
   return (

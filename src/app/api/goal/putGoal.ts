@@ -1,13 +1,13 @@
 import axios from "axios";
 import { API_URL } from "../../context/AuthContext";
-import { goalResult } from "../../dataTypes/types";
+import { goalResultType } from "../../dataTypes/types";
 
 export const putGoal = async ({
   totalKCal,
   fats,
   proteins,
   carbohydrates,
-}: goalResult) => {
+}: goalResultType) => {
   try {
     const response = await axios.put(`${API_URL}/goal`, {
       totalKCal,

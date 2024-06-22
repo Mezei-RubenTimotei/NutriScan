@@ -8,6 +8,6 @@ export default function calculateProgress(meals: mealType[]): goalResultType {
       proteins: accumulator.proteins + currentMeal.proteins,
       fats: accumulator.fats + currentMeal.fats,
     }),
-    { totalKCal: 0, carbohydrates: 0, proteins: 0, fats: 0 } // Initial accumulator values
+    { totalKCal: 0, carbohydrates: 0, proteins: 0, fats: 0 }
   );
 }

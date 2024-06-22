@@ -4,7 +4,6 @@ import axios from "axios";
 
 interface AuthProps {
   authState?: { token: string | null; authenticated: boolean | null };
-  onRegister?: (email: string | null, password: string) => Promise<any>;
   onLogin?: (email: string | null, password: string) => Promise<any>;
   onLogout?: () => Promise<any>;
 }
@@ -40,14 +39,6 @@ export const AuthProvider = ({ children }: any) => {
     };
     loadToken();
   }, []);
-
-  const register = async (email: string, password: string) => {
-    try {
-      return await axios.post(`${API_URL}/users`, { email, password });
-    } catch (e) {
-      return { error: true, msg: (e as any).response.data.msg };
-    }
-  };
 
   const login = async (user: string, password: string) => {
     try {
@@ -88,7 +79,6 @@ export const AuthProvider = ({ children }: any) => {
   };
 
   const value = {
-    onRegister: register,
     onLogin: login,
     onLogout: logout,
     authState,
